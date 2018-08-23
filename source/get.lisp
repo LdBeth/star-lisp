@@ -502,7 +502,7 @@ non-existent processor.
   (when (not (eql dimensionality (length (vp-set-dimensions (pvar-vp-set pvar)))))
     (error
       "~S: You are trying to operate on a pvar in a ~D dimensional way, but the pvar ~S is defined in a vp set of ~D dimensions"
-      function-name dimensionality (length (vp-set-dimensions (pvar-vp-set pvar)))
+      function-name dimensionality pvar (length (vp-set-dimensions (pvar-vp-set pvar)))
       )))
 
 (defun check-dimension-scalar (dimension-scalar function-name)

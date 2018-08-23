@@ -356,7 +356,7 @@
             (setq end *number-of-processors-limit*)
             )
            (t (setq error-string
-                    (format nil "You specified :CUBE mode but :START, ~S, and :END, ~S, were both lists") start end
+                    (format nil "You specified :CUBE mode but :START, ~S, and :END, ~S, were both lists" start end)
                   ))))
          (t (error "This is impossible"))
          ))))
