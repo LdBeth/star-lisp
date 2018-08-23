@@ -47,6 +47,7 @@
     (:shadow-list-symbol *common-lisp-shadowed-symbol-names*)
   (:use "COMMON-LISP")
   (:nicknames "*LISP")
+  (:shadow :proclaim :declaim)
   )
 
 

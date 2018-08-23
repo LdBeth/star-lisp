@@ -66,5 +66,5 @@
      (:file "canon-mm-example")
      (:file "combinations-example")
      (:file "primes-example")
-     ;; (:file "timing-example")
+     (:file "timing-example")
      (:file "very-long-addition-example")))))

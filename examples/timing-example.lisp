@@ -19,7 +19,7 @@
       (with-compile-time-local-property (compile-time-prop *safety* 0)
 	  ;; Cause the 1000 iterations of the
 	  ;; polynomial evaluation to be timed.
-	  (cm:time
+	  (#+*LISP-HARDWARE cm:time #+ccl cl:time
 	    (dotimes (j 200)
 	      (*set y (+!! (!! 4.0) (*!! x (+!! (!! 2.0) (*!! x (!! 3.0))))))
 	      )))))))

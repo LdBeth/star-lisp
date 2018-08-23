@@ -164,7 +164,6 @@ pvar type of the proper type.
   `(eval-when (:compile-toplevel :load-toplevel :execute)
      (starlisp-proclaim ,decl-spec)))
 
-#+(or)
 (defun *lisp::proclaim (proclamation)
   (starlisp-proclaim proclamation)
   )
@@ -174,7 +173,6 @@ pvar type of the proper type.
      ,@(mapcar #'(lambda (ds) `(starlisp-proclaim ',ds)) decl-specs)
      ))
 
-#+(or)
 (defmacro *lisp::declaim (&rest decl-specs) `(*declaim ,@decl-specs))
 
 (defun unproclaim (decl-spec)
