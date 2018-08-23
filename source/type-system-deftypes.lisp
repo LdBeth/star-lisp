@@ -22,8 +22,9 @@
 (deftype pvar (&optional (element-type '*))
   ;; I have to return a satisfies type with a closure so that typep can work.
   ;; But, returning a closure will blow up both subtypep and the compiler on lucid.
-  (let ((closure (*lisp-i::pvar-type-predicate 
-                  (cadr (*lisp-i::canonical-pvar-type `(pvar ,element-type))))))
+  (let ((closure
+          (*lisp-i::pvar-type-predicate
+           (cadr (*lisp-i::canonical-pvar-type `(pvar ,element-type))))))
     `(satisfies ,closure)))
 
 

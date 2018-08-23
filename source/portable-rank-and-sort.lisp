@@ -79,7 +79,8 @@
 ;;;; for the entire segment.
 
 
-(*proclaim '(ftype (function (t) boolean-pvar) t!!-in-first-active-processor-along-row))
+(*proclaim '(ftype (function (t) boolean-pvar)
+             t!!-in-first-active-processor-along-row))
 
 (defun t!!-in-first-active-processor-along-row (dimension-constant)
 
@@ -853,30 +854,30 @@ It is an error if the argument float-pvar is not a float pvar."
       (declare (type (field-pvar *) pvar key-pvar))
       (declare (type boolean-pvar segment-pvar))
       (let ((length #+*LISP-HARDWARE (pvar-length pvar) #+*LISP-SIMULATOR 32))
-	#+*LISP-SIMULATOR
-	(setq length length)  ;; hack to make compiler not issue warning
-	(with-copied-pvar (pvar dest sort!!-return)
-	  (*let (rank start-self-address enumeration)
-	    (declare (type (field-pvar *current-send-address-length*) rank start-self-address enumeration))
-	    (*nocompile (*set rank (rank!! key-pvar '<=!! :segment-pvar segment-pvar)))
-	    (*set start-self-address (scan!! (self-address!!) 'copy!! :segment-pvar segment-pvar))
-	    (*set enumeration (1-!! (scan!! (!! 1) '+!! :segment-pvar segment-pvar)))
-	    (*pset :no-collisions 
-		   ;;(the (field-pvar length) pvar) 
-		   pvar
-		   ;;(the (field-pvar length) dest)
-		   dest
-		   (+!! start-self-address rank)
-		   )
-	    (*set ;;(the (field-pvar length) dest)
-		  dest
-		  (pref!! ;;(the (field-pvar length) dest)
-		          dest
-			  (+!! start-self-address enumeration) 
-			  :collision-mode :no-collisions))
-	    )
-	  dest
-	  )))))
+        #+*LISP-SIMULATOR
+        (setq length length)  ;; hack to make compiler not issue warning
+        (with-copied-pvar (pvar dest sort!!-return)
+          (*let (rank start-self-address enumeration)
+            (declare (type (field-pvar *current-send-address-length*) rank start-self-address enumeration))
+            (*nocompile (*set rank (rank!! key-pvar '<=!! :segment-pvar segment-pvar)))
+            (*set start-self-address (scan!! (self-address!!) 'copy!! :segment-pvar segment-pvar))
+            (*set enumeration (1-!! (scan!! (!! 1) '+!! :segment-pvar segment-pvar)))
+            (*pset :no-collisions
+                   #+*LISP-HARDWARE (the (field-pvar length) pvar)
+                   #+*LISP-SIMULATOR pvar
+                   #+*LISP-HARDWARE (the (field-pvar length) dest)
+                   #+*LISP-SIMULATOR dest
+                   (+!! start-self-address rank)
+                   )
+            (*set  #+*LISP-HARDWARE (the (field-pvar length) dest)
+                   #+*LISP-SIMULATOR dest
+                   (pref!!
+                    #+*LISP-HARDWARE (the (field-pvar length) dest)
+                    #+*LISP-SIMULATOR dest
+                    (+!! start-self-address enumeration)
+                    :collision-mode :no-collisions))
+            )
+          dest)))))
 
 
 (defun unsegmented-grid-sort!!-internal (pvar dimension-constant key)
@@ -895,46 +896,57 @@ It is an error if the argument float-pvar is not a float pvar."
   ;; new address using the function address-plus-nth!!, just
   ;; as a send address can be incremented simply by using addition.
 
-
   (*compile-blindly
 
     (*locally
       (declare (type (field-pvar *) pvar key-pvar))
       (declare (type boolean-pvar segment-pvar))
 
-      (let ((length #+*LISP-HARDWARE (pvar-length pvar) #+*LISP-SIMULATOR 32))
-	#+*LISP-SIMULATOR
-	(setq length length) ; hack to make compiler not issue a warning.
-	(with-copied-pvar (pvar dest sort!!-return)
-	  (*let (rank enumeration start-address-object)
-	    (declare (type (field-pvar *current-send-address-length*) rank enumeration))
-	    (declare (type (pvar address-object) start-address-object))
-	    nil
-	    (*nocompile
-	      (*set rank
-		    (rank!! key-pvar '<=!! :segment-pvar segment-pvar :dimension dimension-constant))
-	      (*set start-address-object
-		    (scan!! (self!!) 'copy!! :segment-pvar segment-pvar :dimension dimension-constant))
-	      )
+      (let ((length #+*LISP-HARDWARE (pvar-length pvar)
+                    #+*LISP-SIMULATOR 32))
+        #+*LISP-SIMULATOR
+        (setq length length) ; hack to make compiler not issue a warning.
+        (with-copied-pvar (pvar dest sort!!-return)
+          (*let (rank enumeration start-address-object)
+            (declare (type (field-pvar *current-send-address-length*) rank enumeration))
+            (declare (type (pvar address-object) start-address-object))
+            nil
+            (*nocompile
+              (*set rank
+                    (rank!! key-pvar '<=!!
+                            :segment-pvar segment-pvar
+                            :dimension dimension-constant))
+              (*set start-address-object
+                    (scan!! (self!!) 'copy!!
+                            :segment-pvar segment-pvar
+                            :dimension dimension-constant)))
 
-	    (*set enumeration
-		  (1-!! (scan!! (!! 1) '+!! :segment-pvar segment-pvar :dimension dimension-constant)))
-	    (progn
-	      (*nocompile
-		(*pset :no-collisions ;; (the (field-pvar length) pvar)
-                        pvar ;; (the (field-pvar length) dest)
-                        dest
-		       (address-plus-nth!! start-address-object rank (!! (the fixnum dimension-constant)))
-		       ))
-	      (*set ;; (the (field-pvar length) dest)
-                    dest
-		    (pref!! ;;(the (field-pvar length) dest)
-                            dest
-			    (address-plus-nth!! start-address-object enumeration (!! (the fixnum dimension-constant)))
-			    :collision-mode :no-collisions))
-	      ))
-	  dest
-	  )))))
+            (*set enumeration
+                  (1-!! (scan!! (!! 1) '+!!
+                                :segment-pvar segment-pvar
+                                :dimension dimension-constant)))
+            (progn
+              (*nocompile
+                (*pset :no-collisions
+                       #+*LISP-HARDWARE
+                       (the (field-pvar length) pvar)
+                       #+*LISP-SIMULATOR pvar
+                       #+*LISP-HARDWARE
+                       (the (field-pvar length) dest)
+                       #+*LISP-SIMULATOR dest
+                       (address-plus-nth!! start-address-object rank
+                                           (!! (the fixnum dimension-constant)))
+                       ))
+              (*set #+*LISP-HARDWARE
+                    (the (field-pvar length) dest)
+                    #+*LISP-SIMULATOR dest
+                    (pref!! #+*LISP-HARDWARE
+                            (the (field-pvar length) dest)
+                            #+*LISP-SIMULATOR dest
+                            (address-plus-nth!! start-address-object enumeration
+                                                (!! (the fixnum dimension-constant)))
+                            :collision-mode :no-collisions))))
+          dest)))))
 
 
 
@@ -1006,54 +1018,52 @@ It is an error if the argument float-pvar is not a float pvar."
   (safety-check
     (new-vp-pvar-check pvar 'segmented-spread!!)
     (new-vp-pvar-check segment-pvar 'segmented-spread!!)
-    (new-vp-pvar-check element-pvar 'segmented-spread!!)
-    )
-    
+    (new-vp-pvar-check element-pvar 'segmented-spread!!))
+  
   (without-void-pvars (pvar segment-pvar element-pvar)
 
     (*locally
       (declare (type (field-pvar (pvar-length pvar)) pvar))
       (*let (boolean-segment-pvar boolean-element-pvar start-of-segment-address)
-	(declare (type boolean-pvar boolean-segment-pvar boolean-element-pvar))
-	(declare (type (field-pvar *current-send-address-length*) start-of-segment-address))
-	(*nocompile
-	  (*set boolean-segment-pvar segment-pvar)
-	  (*set boolean-element-pvar element-pvar)
-	  )
-      
-	(with-copied-pvar (pvar result-pvar segmented-spread!!-return)
+        (declare (type boolean-pvar boolean-segment-pvar boolean-element-pvar))
+        (declare (type (field-pvar *current-send-address-length*) start-of-segment-address))
+        (*nocompile
+          (*set boolean-segment-pvar segment-pvar)
+          (*set boolean-element-pvar element-pvar)
+          )
+        
+        (with-copied-pvar (pvar result-pvar segmented-spread!!-return)
 
-	  (*locally
-	    (declare (type (field-pvar (pvar-length pvar)) result-pvar))
+          (*locally
+            (declare (type (field-pvar (pvar-length pvar)) result-pvar))
 
-	    ;; Simply figure out the address of the first processor
-	    ;; of each segment, and send the data from the element
-	    ;; identified by element-pvar to the beginning of the
-	    ;; segment.  Then copy scan the data to all the processors
-	    ;; in the segment.
+            ;; Simply figure out the address of the first processor
+            ;; of each segment, and send the data from the element
+            ;; identified by element-pvar to the beginning of the
+            ;; segment.  Then copy scan the data to all the processors
+            ;; in the segment.
 
-	    (cond
-	
-	      ((null dimension-constant)
-	       (*set start-of-segment-address (scan!! (self-address!!) 'copy!! :segment-pvar boolean-segment-pvar))
-	       (*when boolean-element-pvar
-		 (*pset :no-collisions pvar result-pvar start-of-segment-address)
-		 )
-	       (*set result-pvar (scan!! result-pvar 'copy!! :segment-pvar boolean-segment-pvar))
-	       result-pvar
-	       )
+            (cond
+              
+              ((null dimension-constant)
+               (*set start-of-segment-address
+                     (scan!! (self-address!!) 'copy!! :segment-pvar boolean-segment-pvar))
+               (*when boolean-element-pvar
+                 (*pset :no-collisions pvar result-pvar start-of-segment-address))
+               (*set result-pvar
+                     (scan!! result-pvar 'copy!! :segment-pvar boolean-segment-pvar))
+               result-pvar)
 
-	      ((and (integerp dimension-constant) (< -1 dimension-constant *number-of-dimensions*))
-	       (*set start-of-segment-address
-		     (scan!! (self-address!!) 'copy!! :dimension dimension-constant :segment-pvar boolean-segment-pvar))
-	       (*when boolean-element-pvar
-		 (*pset :no-collisions pvar result-pvar start-of-segment-address)
-		 )
-	       (*set result-pvar
-		     (scan!! result-pvar 'copy!! :dimension dimension-constant :segment-pvar boolean-segment-pvar))
-	       result-pvar
-	       )
-
-	      )))))))
+              ((and (integerp dimension-constant) (< -1 dimension-constant *number-of-dimensions*))
+               (*set start-of-segment-address
+                     (scan!! (self-address!!) 'copy!!
+                             :dimension dimension-constant :segment-pvar boolean-segment-pvar))
+               (*when boolean-element-pvar
+                 (*pset :no-collisions pvar result-pvar start-of-segment-address)
+                 )
+               (*set result-pvar
+                     (scan!! result-pvar 'copy!!
+                             :dimension dimension-constant :segment-pvar boolean-segment-pvar))
+               result-pvar))))))))
 
 
