@@ -1,0 +1,116 @@
+;;; -*- Mode: LISP; Syntax: Common-lisp; Package: User; Base: 10 -*-
+
+(in-package :user)
+ 
+(define-alias-prefix-char #\$)
+
+(define-alias "STARLISP" "/usr/local/etc/starlisp/")
+(define-alias "VERSION" "f20/")
+
+(make-system-file-list 
+
+ ;; F20 is meant to work under ANSI Standard Common Lisp, circa 2001.
+ ;; Right now it runs under Allegro, Lispworks and Corman.
+
+ :F20
+
+ '("$STARLISP" "$VERSION" "pre-package")
+ '("$STARLISP" "$VERSION" "make-packages")
+ '("$STARLISP" "$VERSION" "def-starlisp")
+ '("$STARLISP" "$VERSION" "external-symbols")
+ '("$STARLISP" "$VERSION" "import-export")
+ '("$STARLISP" "$VERSION" "help")
+ '("$STARLISP" "$VERSION" "external-defvars")
+ '("$STARLISP" "$VERSION" "starlisp-compiler-vars")
+
+ '("$STARLISP" "$VERSION" "dummy-functions")
+ '("$STARLISP" "$VERSION" "utility-macros")
+ '("$STARLISP" "$VERSION" "utilities")
+ '("$STARLISP" "$VERSION" "simulator-specification")
+ '("$STARLISP" "$VERSION" "definitions")
+ '("$STARLISP" "$VERSION" "pvars")
+ '("$STARLISP" "$VERSION" "context")
+ '("$STARLISP" "$VERSION" "geometries") 
+ '("$STARLISP" "$VERSION" "vp-sets")
+
+ '("$STARLISP" "$VERSION" "type-system-basics")
+ '("$STARLISP" "$VERSION" "defstruct-interface")
+ ;; '("$STARLISP" "$VERSION" "destructuring-bind")
+ '("$STARLISP" "$VERSION" "new-canonical-pvar-type") 
+ '("$STARLISP" "$VERSION" "valid-pvar-type")  
+ '("$STARLISP" "$VERSION" "type-system-internals") 
+ '("$STARLISP" "$VERSION" "pvar-type-predicates")                       
+ '("$STARLISP" "$VERSION" "canonical-pvar-type")                       
+ '("$STARLISP" "$VERSION" "type-system-interface")
+ '("$STARLISP" "$VERSION" "type-system-deftypes") 
+
+ ;; '("$STARLISP" "$VERSION" "portable-proclaim")
+
+ '("$STARLISP" "$VERSION" "defstruct-parsing")
+ '("$STARLISP" "$VERSION" "defstruct-output")
+
+ ;; '("$STARLISP" "$VERSION" "portable-geometry-ops")
+
+ '("$STARLISP" "$VERSION" "starlisp-setf")
+ 
+ '("$STARLISP" "$VERSION" "unportable-proclaim")
+
+ '("$STARLISP" "$VERSION" "no-bang-bang")
+ 
+ '("$STARLISP" "$VERSION" "simulator-proclaim")
+ 
+ '("$STARLISP" "$VERSION" "port")
+ '("$STARLISP" "$VERSION" "macros")
+ '("$STARLISP" "$VERSION" "macros-2")
+ 
+ '("$STARLISP" "$VERSION" "pvar-array-pool")
+ 
+ '("$STARLISP" "$VERSION" "handle-returning-pvar")
+ '("$STARLISP" "$VERSION" "pvar-allocation")
+ '("$STARLISP" "$VERSION" "stardefvar-internals")
+ '("$STARLISP" "$VERSION" "hypergrid")
+ '("$STARLISP" "$VERSION" "vp-sets-implementation")
+ '("$STARLISP" "$VERSION" "stardefvars")
+ 
+ '("$STARLISP" "$VERSION" "genfunctions")
+ 
+ '("$STARLISP" "$VERSION" "bang-bang")
+ '("$STARLISP" "$VERSION" "sim")
+ '("$STARLISP" "$VERSION" "trivfunctions")
+
+ '("$STARLISP" "$VERSION" "pref")
+ 
+ ;; '("$STARLISP" "$VERSION" "defstruct-output")
+ 
+ '("$STARLISP" "$VERSION" "address-object-defstruct")
+ '("$STARLISP" "$VERSION" "functions")
+
+ 
+ '("$STARLISP" "$VERSION" "internal-addressing")
+ '("$STARLISP" "$VERSION" "addressing")
+ '("$STARLISP" "$VERSION" "arrays")
+ '("$STARLISP" "$VERSION" "send")
+ '("$STARLISP" "$VERSION" "get")
+ '("$STARLISP" "$VERSION" "address-objects")
+ '("$STARLISP" "$VERSION" "address-object-smashing")
+ 
+ '("$STARLISP" "$VERSION" "ppp")  
+ '("$STARLISP" "$VERSION" "cold-boot")
+
+ '("$STARLISP" "$VERSION" "bitblt")
+ '("$STARLISP" "$VERSION" "advanced-functions")
+ '("$STARLISP" "$VERSION" "portable-rank-and-sort")
+ 
+ '("$STARLISP" "$VERSION" "vector-functions")
+ '("$STARLISP" "$VERSION" "sequence-ops-internal")
+ '("$STARLISP" "$VERSION" "sequence-ops")
+ '("$STARLISP" "$VERSION" "rational-scanning")
+ 
+ ;  '("$STARLISP" "$VERSION" "defstruct-tests")
+ ;  '("$STARLISP" "$VERSION" "array-tests")
+
+ '("$STARLISP" "$VERSION" "patches")
+
+ '("$STARLISP" "$VERSION" "text-processing-example")
+ 
+ )
