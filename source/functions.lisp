@@ -337,25 +337,23 @@
     ))
 
 
-(defun digit-char!! (weight-pvar &optional (radix-pvar (!! 10)) (font-pvar (!! 0)))
-  (simple-pvar-argument!! weight-pvar &opt (radix-pvar font-pvar))
+(defun digit-char!! (weight-pvar &optional (radix-pvar (!! 10)))
+  (simple-pvar-argument!! weight-pvar &opt (radix-pvar))
   (safety-check
     (new-pvar-check weight-pvar 'make-weight!!)
     (new-pvar-check radix-pvar 'make-weight!!)
-    (new-pvar-check font-pvar 'make-weight!!)
     )
   (incf-use-count 'make-weight!!)
   (let ((return-pvar (allocate-temp-general-pvar)))
     (when
       (with-selected-general-pvar-arrays
 	(processor)
-	(return-array weight-array radix-array font-array)
-	(return-pvar weight-pvar radix-pvar font-pvar)
+	(return-array weight-array radix-array)
+	(return-pvar weight-pvar radix-pvar)
 	(let ((radix (aref radix-array processor))
-	      (font (aref font-array processor))
 	      (weight (aref weight-array processor))
 	      )
-	  (setf (aref return-array processor) (digit-char weight radix font))
+	  (setf (aref return-array processor) (digit-char weight radix))
 	  ))
       (make-non-void return-pvar)
       )
